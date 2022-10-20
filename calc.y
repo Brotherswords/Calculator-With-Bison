@@ -4,22 +4,29 @@
 #include <math.h>
 #include <stdio.h>
 #include <iostream>
+#include <map>
 
 using namespace std;
 
 extern int yylex();
 extern int yyparse();
 extern void yyerror(const char* s);
+
+map<string, double> vars;
 %}
 
 %start stmt_list
 
 %union {
-    double numVal; 
+    double numVal;
+    std::string *var;
+
 }
+
 
 %token<numVal> NUMBER
 %token EOL
+%token<var> VARIABLE
 %type<numVal> exp
 
 %right '='
@@ -35,13 +42,15 @@ stmt_list:  stmt
 
 stmt:   EOL
         | exp EOL { 
-          cout << "= " << $1 << endl;
+          cout << "=" << $1 << endl;
           cout << ">> ";
         }
+        | VARIABLE '=' exp { cout << *($1) << "="<<  $3 << endl; vars[*$1] = $3; cout  << ">>";}
         | error EOL 
 ;
 
 exp:    NUMBER            { $$ = $1;         }
+        | VARIABLE        { $$ = vars[*$1]; }
         | exp '+' exp     { $$ = $1 + $3;    }
         | exp '-' exp     { $$ = $1 - $3;    }
         | exp '*' exp     { $$ = $1 * $3;    }
@@ -49,7 +58,7 @@ exp:    NUMBER            { $$ = $1;         }
       /* Exponentiation */
         | exp '^' exp     { $$ = pow ($1, $3); }
       /* Unary minus    */
-        | '~' exp         { $$ = -$2;        }
+        | '~' exp         { $$ = -$2; }
         |'(' exp ')'       { $$ = $2; }
 ;
 %%

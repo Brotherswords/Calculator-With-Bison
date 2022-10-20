@@ -5,21 +5,26 @@
 #include <stdlib.h>
 #include <iostream>
 #include "calc.tab.h"
+
+using namespace std;
+
 %}
 
 
 /* Regular declarations section */
+var [_[:alpha:]][_[:alnum:]]* 
 num [-]?[[:digit:]]+|[-+]?[[:digit:]]*\.[[:digit:]]+([eE][-+]?[[:digit:]]+)?
-valid [*+-/^=()~]
+valid [*+-/^=()~]  
 eol [\n]
 
 
 /* Rules section */
 %%
-{num} {yylval.numVal = atof(yytext); return NUMBER;}
-
 {valid} {return yytext[0]; /* pass them to be consumed by bison */}
 {eol} {return EOL;}
+{var} {yylval.var = new std::string(yytext); return VARIABLE;}
+{num} {yylval.numVal = atof(yytext); return NUMBER;}
+
 
 . {; /* sink all extra characters */}  
 %%
