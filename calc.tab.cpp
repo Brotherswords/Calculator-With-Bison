@@ -1400,7 +1400,7 @@ yyreduce:
 
   case 15:
 #line 63 "calc.y"
-    { (yyval.numVal) = -(yyvsp[(2) - (2)].numVal);;}
+    { (yyval.numVal) = -(yyvsp[(2) - (2)].numVal); ;}
     break;
 
   case 16:

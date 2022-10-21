@@ -13,8 +13,8 @@ using namespace std;
 
 /* Regular declarations section */
 var [_[:alpha:]][_[:alnum:]]* 
-num [-]?[[:digit:]]+|[-+]?[[:digit:]]*\.[[:digit:]]+([eE][-+]?[[:digit:]]+)?
-valid [*+-/^=()~]  
+num [[:digit:]]+|[-+]?[[:digit:]]*\.[[:digit:]]+([eE][-+]?[[:digit:]]+)?
+valid [*+-/^=()]  
 eol [\n]
 whitespace [ |\t]*
 

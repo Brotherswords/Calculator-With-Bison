@@ -34,8 +34,8 @@ map<string, double> vars;
 %left '*' '/'
 %right '^'
 %left '(' ')'
-%left UMINUS
-%left UPLUS
+%right UMINUS
+%right UPLUS
 
 %% /* Grammar rules and actions follow */
 stmt_list:  stmt
