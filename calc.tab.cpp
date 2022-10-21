@@ -96,6 +96,8 @@ using namespace std;
 extern int yylex();
 extern int yyparse();
 extern void yyerror(const char* s);
+int errFlag = 0;
+int statementNum = 1;
 
 map<string, double> vars;
 
@@ -120,14 +122,14 @@ map<string, double> vars;
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 20 "calc.y"
+#line 22 "calc.y"
 {
     double numVal;
     std::string *var;
 
 }
 /* Line 193 of yacc.c.  */
-#line 131 "calc.tab.c"
+#line 133 "calc.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -140,7 +142,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 144 "calc.tab.c"
+#line 146 "calc.tab.c"
 
 #ifdef short
 # undef short
@@ -428,8 +430,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    41,    41,    42,    45,    46,    50,    51,    54,    55,
-      56,    57,    58,    59,    61,    63,    64,    65
+       0,    43,    43,    44,    47,    48,    57,    58,    61,    62,
+      70,    71,    72,    73,    75,    77,    78,    79
 };
 #endif
 
@@ -1351,71 +1353,82 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 46 "calc.y"
+#line 48 "calc.y"
     { 
-          cout << "=" << (yyvsp[(1) - (2)].numVal) << endl;
-          cout << ">> ";
+          statementNum+=1;
+          
+          if (errFlag == 0){
+            cout << "= " << (yyvsp[(1) - (2)].numVal) << endl;
+            cout << "[" << statementNum << "] ";
+          }
+          errFlag = 0;
         ;}
     break;
 
   case 6:
-#line 50 "calc.y"
-    { cout << *((yyvsp[(1) - (3)].var)) << "="<<  (yyvsp[(3) - (3)].numVal) << endl; vars[*(yyvsp[(1) - (3)].var)] = (yyvsp[(3) - (3)].numVal); cout  << ">>";;}
+#line 57 "calc.y"
+    { cout << *((yyvsp[(1) - (3)].var)) << " = "<<  (yyvsp[(3) - (3)].numVal) << endl; vars[*(yyvsp[(1) - (3)].var)] = (yyvsp[(3) - (3)].numVal); cout << "[" << statementNum << "] ";;}
     break;
 
   case 8:
-#line 54 "calc.y"
+#line 61 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (1)].numVal);         ;}
     break;
 
   case 9:
-#line 55 "calc.y"
-    { (yyval.numVal) = vars[*(yyvsp[(1) - (1)].var)]; ;}
+#line 63 "calc.y"
+    { 
+          if(vars.contains(*(yyvsp[(1) - (1)].var))){
+            (yyval.numVal) = vars[*(yyvsp[(1) - (1)].var)];
+          }else{
+            errFlag = 1;
+            yyerror((*(yyvsp[(1) - (1)].var) + " not declared.").c_str());} 
+        ;}
     break;
 
   case 10:
-#line 56 "calc.y"
+#line 70 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (3)].numVal) + (yyvsp[(3) - (3)].numVal);    ;}
     break;
 
   case 11:
-#line 57 "calc.y"
+#line 71 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (3)].numVal) - (yyvsp[(3) - (3)].numVal);    ;}
     break;
 
   case 12:
-#line 58 "calc.y"
+#line 72 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (3)].numVal) * (yyvsp[(3) - (3)].numVal);    ;}
     break;
 
   case 13:
-#line 59 "calc.y"
+#line 73 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (3)].numVal) / (yyvsp[(3) - (3)].numVal);    ;}
     break;
 
   case 14:
-#line 61 "calc.y"
+#line 75 "calc.y"
     { (yyval.numVal) = pow ((yyvsp[(1) - (3)].numVal), (yyvsp[(3) - (3)].numVal)); ;}
     break;
 
   case 15:
-#line 63 "calc.y"
+#line 77 "calc.y"
     { (yyval.numVal) = -(yyvsp[(2) - (2)].numVal); ;}
     break;
 
   case 16:
-#line 64 "calc.y"
+#line 78 "calc.y"
     { (yyval.numVal) = (yyvsp[(2) - (2)].numVal);;}
     break;
 
   case 17:
-#line 65 "calc.y"
+#line 79 "calc.y"
     { (yyval.numVal) = (yyvsp[(2) - (3)].numVal); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1419 "calc.tab.c"
+#line 1432 "calc.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1629,20 +1642,21 @@ yyreturn:
 }
 
 
-#line 67 "calc.y"
+#line 81 "calc.y"
 
 
 
 /* function invoked after finishing an input file */
 int main ()
 {
-  cout << ">> ";
+  cout << "[" << statementNum << "] ";
   yyparse ();
   return 0;
 }
 
 void yyerror (const char *s)  /* Called by yyparse() on error */
 {
-  cout << s << endl;
-  cout << ">> ";
+  statementNum+=1;
+  cout << "Error: " << s << " at statement: " << statementNum << endl;
+  cout << "[" << statementNum << "] ";
 }
