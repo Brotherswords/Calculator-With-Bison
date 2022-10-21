@@ -16,6 +16,7 @@ var [_[:alpha:]][_[:alnum:]]*
 num [-]?[[:digit:]]+|[-+]?[[:digit:]]*\.[[:digit:]]+([eE][-+]?[[:digit:]]+)?
 valid [*+-/^=()~]  
 eol [\n]
+whitespace [ |\t]*
 
 
 /* Rules section */
@@ -24,7 +25,7 @@ eol [\n]
 {eol} {return EOL;}
 {var} {yylval.var = new std::string(yytext); return VARIABLE;}
 {num} {yylval.numVal = atof(yytext); return NUMBER;}
-
+{whitespace} {};
 
 . {; /* sink all extra characters */}  
 %%

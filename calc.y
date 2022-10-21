@@ -34,6 +34,8 @@ map<string, double> vars;
 %left '*' '/'
 %right '^'
 %left '(' ')'
+%left UMINUS
+%left UPLUS
 
 %% /* Grammar rules and actions follow */
 stmt_list:  stmt
@@ -58,7 +60,8 @@ exp:    NUMBER            { $$ = $1;         }
       /* Exponentiation */
         | exp '^' exp     { $$ = pow ($1, $3); }
       /* Unary minus    */
-        | '~' exp         { $$ = -$2; }
+        | '-' exp %prec UMINUS   { $$ = -$2; }
+        | '+' exp %prec UPLUS   { $$ = $2;}
         |'(' exp ')'       { $$ = $2; }
 ;
 %%

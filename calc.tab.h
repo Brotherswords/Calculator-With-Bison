@@ -41,13 +41,17 @@
    enum yytokentype {
      NUMBER = 258,
      EOL = 259,
-     VARIABLE = 260
+     VARIABLE = 260,
+     UMINUS = 261,
+     UPLUS = 262
    };
 #endif
 /* Tokens.  */
 #define NUMBER 258
 #define EOL 259
 #define VARIABLE 260
+#define UMINUS 261
+#define UPLUS 262
 
 
 
@@ -61,7 +65,7 @@ typedef union YYSTYPE
 
 }
 /* Line 1529 of yacc.c.  */
-#line 65 "calc.tab.h"
+#line 69 "calc.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
