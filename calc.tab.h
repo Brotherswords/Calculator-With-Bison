@@ -58,7 +58,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 22 "calc.y"
+#line 24 "calc.y"
 {
     double numVal;
     std::string *var;

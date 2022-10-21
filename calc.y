@@ -11,7 +11,9 @@ using namespace std;
 extern int yylex();
 extern int yyparse();
 extern void yyerror(const char* s);
-int errFlag = 0;
+int declFlag = 0;
+int zeroFlag = 0;
+int validFlag = 0;
 int statementNum = 1;
 
 map<string, double> vars;
@@ -36,8 +38,8 @@ map<string, double> vars;
 %left '*' '/'
 %right '^'
 %left '(' ')'
-%right UMINUS
-%right UPLUS
+%left UMINUS
+%left UPLUS
 
 %% /* Grammar rules and actions follow */
 stmt_list:  stmt
@@ -46,15 +48,22 @@ stmt_list:  stmt
 
 stmt:   EOL
         | exp EOL { 
-          statementNum+=1;
           
-          if (errFlag == 0){
+          if (declFlag == 0 && zeroFlag == 0){
+            statementNum+=1;
             cout << "= " << $1 << endl;
             cout << "[" << statementNum << "] ";
           }
-          errFlag = 0;
+          declFlag = 0;
+          zeroFlag = 0;
         }
-        | VARIABLE '=' exp { cout << *($1) << " = "<<  $3 << endl; vars[*$1] = $3; cout << "[" << statementNum << "] ";}
+        | VARIABLE '=' exp { if(declFlag == 0 && validFlag == 0 && zeroFlag == 0) {
+                                cout << *($1) << " = "<<  $3 << endl; vars[*$1] = $3; statementNum+=1; cout << "[" << statementNum << "] ";
+                              }
+                              declFlag = 0;
+                              validFlag = 0;
+                              zeroFlag = 0;
+                            }
         | error EOL 
 ;
 
@@ -64,13 +73,20 @@ exp:    NUMBER            { $$ = $1;         }
           if(vars.contains(*$1)){
             $$ = vars[*$1];
           }else{
-            errFlag = 1;
-            yyerror((*$1 + " not declared.").c_str());} 
+            declFlag = 1;
+            yyerror((*$1 + " not declared").c_str());} 
         }
+        | VARIABLE VARIABLE {validFlag = 1; yyerror(("Syntax Error"));}
         | exp '+' exp     { $$ = $1 + $3;    }
         | exp '-' exp     { $$ = $1 - $3;    }
         | exp '*' exp     { $$ = $1 * $3;    }
-        | exp '/' exp     { $$ = $1 / $3;    }
+        | exp '/' exp     { if ($3 != 0){
+                              $$ = $1 / $3;
+                            }else{
+                              zeroFlag = 1;
+                              yyerror(("Divide by Zero"));
+                            }    
+                          }
       /* Exponentiation */
         | exp '^' exp     { $$ = pow ($1, $3); }
       /* Unary minus    */
@@ -92,6 +108,6 @@ int main ()
 void yyerror (const char *s)  /* Called by yyparse() on error */
 {
   statementNum+=1;
-  cout << "Error: " << s << " at statement: " << statementNum << endl;
+  cout << "Error: " << s << " at statement: " << statementNum-1 << endl;
   cout << "[" << statementNum << "] ";
 }

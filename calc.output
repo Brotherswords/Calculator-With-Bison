@@ -1,3 +1,6 @@
+State 14 conflicts: 1 shift/reduce
+
+
 Grammar
 
     0 $accept: stmt_list $end
@@ -12,31 +15,32 @@ Grammar
 
     7 exp: NUMBER
     8    | VARIABLE
-    9    | exp '+' exp
-   10    | exp '-' exp
-   11    | exp '*' exp
-   12    | exp '/' exp
-   13    | exp '^' exp
-   14    | '-' exp
-   15    | '+' exp
-   16    | '(' exp ')'
+    9    | VARIABLE VARIABLE
+   10    | exp '+' exp
+   11    | exp '-' exp
+   12    | exp '*' exp
+   13    | exp '/' exp
+   14    | exp '^' exp
+   15    | '-' exp
+   16    | '+' exp
+   17    | '(' exp ')'
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
-'(' (40) 16
-')' (41) 16
-'*' (42) 11
-'+' (43) 9 15
-'-' (45) 10 14
-'/' (47) 12
+'(' (40) 17
+')' (41) 17
+'*' (42) 12
+'+' (43) 10 16
+'-' (45) 11 15
+'/' (47) 13
 '=' (61) 5
-'^' (94) 13
+'^' (94) 14
 error (256) 6
 NUMBER (258) 7
 EOL (259) 3 4 6
-VARIABLE (260) 5 8
+VARIABLE (260) 5 8 9
 UMINUS (261)
 UPLUS (262)
 
@@ -50,8 +54,8 @@ stmt_list (17)
 stmt (18)
     on left: 3 4 5 6, on right: 1 2
 exp (19)
-    on left: 7 8 9 10 11 12 13 14 15 16, on right: 4 5 9 10 11 12 13
-    14 15 16
+    on left: 7 8 9 10 11 12 13 14 15 16 17, on right: 4 5 10 11 12
+    13 14 15 16 17
 
 
 state 0
@@ -96,31 +100,20 @@ state 4
 
     5 stmt: VARIABLE . '=' exp
     8 exp: VARIABLE .
+    9    | VARIABLE . VARIABLE
 
-    '='  shift, and go to state 12
+    VARIABLE  shift, and go to state 12
+    '='       shift, and go to state 13
 
     $default  reduce using rule 8 (exp)
 
 
 state 5
 
-   15 exp: '+' . exp
+   16 exp: '+' . exp
 
     NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
-    '+'       shift, and go to state 5
-    '-'       shift, and go to state 6
-    '('       shift, and go to state 7
-
-    exp  go to state 14
-
-
-state 6
-
-   14 exp: '-' . exp
-
-    NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
+    VARIABLE  shift, and go to state 14
     '+'       shift, and go to state 5
     '-'       shift, and go to state 6
     '('       shift, and go to state 7
@@ -128,12 +121,12 @@ state 6
     exp  go to state 15
 
 
-state 7
+state 6
 
-   16 exp: '(' . exp ')'
+   15 exp: '-' . exp
 
     NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
+    VARIABLE  shift, and go to state 14
     '+'       shift, and go to state 5
     '-'       shift, and go to state 6
     '('       shift, and go to state 7
@@ -141,12 +134,25 @@ state 7
     exp  go to state 16
 
 
+state 7
+
+   17 exp: '(' . exp ')'
+
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 14
+    '+'       shift, and go to state 5
+    '-'       shift, and go to state 6
+    '('       shift, and go to state 7
+
+    exp  go to state 17
+
+
 state 8
 
     0 $accept: stmt_list . $end
     2 stmt_list: stmt_list . stmt
 
-    $end      shift, and go to state 17
+    $end      shift, and go to state 18
     error     shift, and go to state 1
     NUMBER    shift, and go to state 2
     EOL       shift, and go to state 3
@@ -155,7 +161,7 @@ state 8
     '-'       shift, and go to state 6
     '('       shift, and go to state 7
 
-    stmt  go to state 18
+    stmt  go to state 19
     exp   go to state 10
 
 
@@ -169,18 +175,18 @@ state 9
 state 10
 
     4 stmt: exp . EOL
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
 
-    EOL  shift, and go to state 19
-    '+'  shift, and go to state 20
-    '-'  shift, and go to state 21
-    '*'  shift, and go to state 22
-    '/'  shift, and go to state 23
-    '^'  shift, and go to state 24
+    EOL  shift, and go to state 20
+    '+'  shift, and go to state 21
+    '-'  shift, and go to state 22
+    '*'  shift, and go to state 23
+    '/'  shift, and go to state 24
+    '^'  shift, and go to state 25
 
 
 state 11
@@ -192,105 +198,103 @@ state 11
 
 state 12
 
-    5 stmt: VARIABLE '=' . exp
+    9 exp: VARIABLE VARIABLE .
 
-    NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
-    '+'       shift, and go to state 5
-    '-'       shift, and go to state 6
-    '('       shift, and go to state 7
-
-    exp  go to state 25
+    $default  reduce using rule 9 (exp)
 
 
 state 13
 
-    8 exp: VARIABLE .
+    5 stmt: VARIABLE '=' . exp
 
-    $default  reduce using rule 8 (exp)
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 14
+    '+'       shift, and go to state 5
+    '-'       shift, and go to state 6
+    '('       shift, and go to state 7
+
+    exp  go to state 26
 
 
 state 14
 
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
-   15    | '+' exp .
+    8 exp: VARIABLE .
+    9    | VARIABLE . VARIABLE
 
-    $default  reduce using rule 15 (exp)
+    VARIABLE  shift, and go to state 12
+
+    VARIABLE  [reduce using rule 8 (exp)]
+    $default  reduce using rule 8 (exp)
 
 
 state 15
 
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
-   14    | '-' exp .
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
+   16    | '+' exp .
 
-    $default  reduce using rule 14 (exp)
+    $default  reduce using rule 16 (exp)
 
 
 state 16
 
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
-   16    | '(' exp . ')'
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
+   15    | '-' exp .
 
-    '+'  shift, and go to state 20
-    '-'  shift, and go to state 21
-    '*'  shift, and go to state 22
-    '/'  shift, and go to state 23
-    '^'  shift, and go to state 24
-    ')'  shift, and go to state 26
+    $default  reduce using rule 15 (exp)
 
 
 state 17
+
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
+   17    | '(' exp . ')'
+
+    '+'  shift, and go to state 21
+    '-'  shift, and go to state 22
+    '*'  shift, and go to state 23
+    '/'  shift, and go to state 24
+    '^'  shift, and go to state 25
+    ')'  shift, and go to state 27
+
+
+state 18
 
     0 $accept: stmt_list $end .
 
     $default  accept
 
 
-state 18
+state 19
 
     2 stmt_list: stmt_list stmt .
 
     $default  reduce using rule 2 (stmt_list)
 
 
-state 19
+state 20
 
     4 stmt: exp EOL .
 
     $default  reduce using rule 4 (stmt)
 
 
-state 20
-
-    9 exp: exp '+' . exp
-
-    NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
-    '+'       shift, and go to state 5
-    '-'       shift, and go to state 6
-    '('       shift, and go to state 7
-
-    exp  go to state 27
-
-
 state 21
 
-   10 exp: exp '-' . exp
+   10 exp: exp '+' . exp
 
     NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
+    VARIABLE  shift, and go to state 14
     '+'       shift, and go to state 5
     '-'       shift, and go to state 6
     '('       shift, and go to state 7
@@ -300,10 +304,10 @@ state 21
 
 state 22
 
-   11 exp: exp '*' . exp
+   11 exp: exp '-' . exp
 
     NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
+    VARIABLE  shift, and go to state 14
     '+'       shift, and go to state 5
     '-'       shift, and go to state 6
     '('       shift, and go to state 7
@@ -313,10 +317,10 @@ state 22
 
 state 23
 
-   12 exp: exp '/' . exp
+   12 exp: exp '*' . exp
 
     NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
+    VARIABLE  shift, and go to state 14
     '+'       shift, and go to state 5
     '-'       shift, and go to state 6
     '('       shift, and go to state 7
@@ -326,10 +330,10 @@ state 23
 
 state 24
 
-   13 exp: exp '^' . exp
+   13 exp: exp '/' . exp
 
     NUMBER    shift, and go to state 2
-    VARIABLE  shift, and go to state 13
+    VARIABLE  shift, and go to state 14
     '+'       shift, and go to state 5
     '-'       shift, and go to state 6
     '('       shift, and go to state 7
@@ -339,98 +343,111 @@ state 24
 
 state 25
 
-    5 stmt: VARIABLE '=' exp .
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
+   14 exp: exp '^' . exp
 
-    '+'  shift, and go to state 20
-    '-'  shift, and go to state 21
-    '*'  shift, and go to state 22
-    '/'  shift, and go to state 23
-    '^'  shift, and go to state 24
+    NUMBER    shift, and go to state 2
+    VARIABLE  shift, and go to state 14
+    '+'       shift, and go to state 5
+    '-'       shift, and go to state 6
+    '('       shift, and go to state 7
 
-    $default  reduce using rule 5 (stmt)
+    exp  go to state 32
 
 
 state 26
 
-   16 exp: '(' exp ')' .
+    5 stmt: VARIABLE '=' exp .
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
 
-    $default  reduce using rule 16 (exp)
+    '+'  shift, and go to state 21
+    '-'  shift, and go to state 22
+    '*'  shift, and go to state 23
+    '/'  shift, and go to state 24
+    '^'  shift, and go to state 25
+
+    $default  reduce using rule 5 (stmt)
 
 
 state 27
 
-    9 exp: exp . '+' exp
-    9    | exp '+' exp .
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
+   17 exp: '(' exp ')' .
 
-    '*'  shift, and go to state 22
-    '/'  shift, and go to state 23
-    '^'  shift, and go to state 24
-
-    $default  reduce using rule 9 (exp)
+    $default  reduce using rule 17 (exp)
 
 
 state 28
 
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   10    | exp '-' exp .
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
+   10 exp: exp . '+' exp
+   10    | exp '+' exp .
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
 
-    '*'  shift, and go to state 22
-    '/'  shift, and go to state 23
-    '^'  shift, and go to state 24
+    '*'  shift, and go to state 23
+    '/'  shift, and go to state 24
+    '^'  shift, and go to state 25
 
     $default  reduce using rule 10 (exp)
 
 
 state 29
 
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   11    | exp '*' exp .
-   12    | exp . '/' exp
-   13    | exp . '^' exp
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   11    | exp '-' exp .
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
 
-    '^'  shift, and go to state 24
+    '*'  shift, and go to state 23
+    '/'  shift, and go to state 24
+    '^'  shift, and go to state 25
 
     $default  reduce using rule 11 (exp)
 
 
 state 30
 
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   12    | exp '/' exp .
-   13    | exp . '^' exp
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   12    | exp '*' exp .
+   13    | exp . '/' exp
+   14    | exp . '^' exp
 
-    '^'  shift, and go to state 24
+    '^'  shift, and go to state 25
 
     $default  reduce using rule 12 (exp)
 
 
 state 31
 
-    9 exp: exp . '+' exp
-   10    | exp . '-' exp
-   11    | exp . '*' exp
-   12    | exp . '/' exp
-   13    | exp . '^' exp
-   13    | exp '^' exp .
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   13    | exp '/' exp .
+   14    | exp . '^' exp
 
-    '^'  shift, and go to state 24
+    '^'  shift, and go to state 25
 
     $default  reduce using rule 13 (exp)
+
+
+state 32
+
+   10 exp: exp . '+' exp
+   11    | exp . '-' exp
+   12    | exp . '*' exp
+   13    | exp . '/' exp
+   14    | exp . '^' exp
+   14    | exp '^' exp .
+
+    '^'  shift, and go to state 25
+
+    $default  reduce using rule 14 (exp)
