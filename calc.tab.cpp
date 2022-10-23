@@ -84,7 +84,7 @@
 
 
 /* Copy the first part of user declarations.  */
-#line 3 "calc.y"
+#line 22 "calc.y"
 
 #include <math.h>
 #include <stdio.h>
@@ -124,7 +124,7 @@ map<string, double> vars;
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 24 "calc.y"
+#line 43 "calc.y"
 {
     double numVal;
     std::string *var;
@@ -432,8 +432,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    45,    45,    46,    49,    50,    60,    67,    70,    71,
-      79,    80,    81,    82,    83,    91,    93,    94,    95
+       0,    64,    64,    65,    68,    69,    79,    86,    89,    90,
+      98,    99,   100,   101,   102,   110,   112,   113,   114
 };
 #endif
 
@@ -1353,7 +1353,7 @@ yyreduce:
   switch (yyn)
     {
         case 5:
-#line 50 "calc.y"
+#line 69 "calc.y"
     { 
           
           if (declFlag == 0 && zeroFlag == 0){
@@ -1367,9 +1367,9 @@ yyreduce:
     break;
 
   case 6:
-#line 60 "calc.y"
+#line 79 "calc.y"
     { if(declFlag == 0 && validFlag == 0 && zeroFlag == 0) {
-                                cout << *((yyvsp[(1) - (3)].var)) << " = "<<  (yyvsp[(3) - (3)].numVal) << endl; vars[*(yyvsp[(1) - (3)].var)] = (yyvsp[(3) - (3)].numVal); statementNum+=1; cout << "[" << statementNum << "] ";
+                                cout << "Variable "<< *((yyvsp[(1) - (3)].var)) << " is assigned to "<<  (yyvsp[(3) - (3)].numVal) << "." << endl; vars[*(yyvsp[(1) - (3)].var)] = (yyvsp[(3) - (3)].numVal); statementNum+=1; cout << "[" << statementNum << "] ";
                               }
                               declFlag = 0;
                               validFlag = 0;
@@ -1378,12 +1378,12 @@ yyreduce:
     break;
 
   case 8:
-#line 70 "calc.y"
+#line 89 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (1)].numVal);         ;}
     break;
 
   case 9:
-#line 72 "calc.y"
+#line 91 "calc.y"
     { 
           if(vars.contains(*(yyvsp[(1) - (1)].var))){
             (yyval.numVal) = vars[*(yyvsp[(1) - (1)].var)];
@@ -1394,27 +1394,27 @@ yyreduce:
     break;
 
   case 10:
-#line 79 "calc.y"
+#line 98 "calc.y"
     {validFlag = 1; yyerror(("Syntax Error"));;}
     break;
 
   case 11:
-#line 80 "calc.y"
+#line 99 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (3)].numVal) + (yyvsp[(3) - (3)].numVal);    ;}
     break;
 
   case 12:
-#line 81 "calc.y"
+#line 100 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (3)].numVal) - (yyvsp[(3) - (3)].numVal);    ;}
     break;
 
   case 13:
-#line 82 "calc.y"
+#line 101 "calc.y"
     { (yyval.numVal) = (yyvsp[(1) - (3)].numVal) * (yyvsp[(3) - (3)].numVal);    ;}
     break;
 
   case 14:
-#line 83 "calc.y"
+#line 102 "calc.y"
     { if ((yyvsp[(3) - (3)].numVal) != 0){
                               (yyval.numVal) = (yyvsp[(1) - (3)].numVal) / (yyvsp[(3) - (3)].numVal);
                             }else{
@@ -1425,22 +1425,22 @@ yyreduce:
     break;
 
   case 15:
-#line 91 "calc.y"
+#line 110 "calc.y"
     { (yyval.numVal) = pow ((yyvsp[(1) - (3)].numVal), (yyvsp[(3) - (3)].numVal)); ;}
     break;
 
   case 16:
-#line 93 "calc.y"
+#line 112 "calc.y"
     { (yyval.numVal) = -(yyvsp[(2) - (2)].numVal); ;}
     break;
 
   case 17:
-#line 94 "calc.y"
+#line 113 "calc.y"
     { (yyval.numVal) = (yyvsp[(2) - (2)].numVal);;}
     break;
 
   case 18:
-#line 95 "calc.y"
+#line 114 "calc.y"
     { (yyval.numVal) = (yyvsp[(2) - (3)].numVal); ;}
     break;
 
@@ -1660,7 +1660,7 @@ yyreturn:
 }
 
 
-#line 97 "calc.y"
+#line 116 "calc.y"
 
 
 

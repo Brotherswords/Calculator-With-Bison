@@ -1,4 +1,23 @@
-/* Reverse polish notation calculator. */
+/*
+Standard Calculator wiht Bison
+
+The stmt_list tokens are used to start the program.
+stmt_list stmt allows for other statements to be elaborated.
+
+stmt tokens are use to decipher EOL and VARIABLE tokens.
+exp EOL handles the setting of new lines and resetitng of flags.
+VARIABLE '=' exp handles the setting of variales.
+
+
+The exp token handles most of the BNF cases.
+exp '+' exp handles addiditon and allows for either a NUMBER or VARIABLE terminal to get used in its place
+exp '-' exp handles subtraction and allows for either a NUMBER or VARIABLE terminal to get used in its place
+exp '*' exp handles multiplication and allows for either a NUMBER or VARIABLE terminal to get used in its place
+exp '/' exp handles division and allows for either a NUMBER or VARIABLE terminal to get used in its place. It also sets flags to indicate divide by zero issues. 
+exp '^' exp handles power/exponentiation and allows for either a NUMBER or VARIABLE terminal to get used in its place. 
+'-' exp %prec UMINUS sets the UNARY minus, and its associated precedence allowing for things like -3-3 and 3--3 to happen without error 
+'+' exp %prec UPLUS sets the UNARY plus, and its associated precedence allowing for things like 3-+2 to happen without error.
+*/
 
 %{
 #include <math.h>
@@ -58,7 +77,7 @@ stmt:   EOL
           zeroFlag = 0;
         }
         | VARIABLE '=' exp { if(declFlag == 0 && validFlag == 0 && zeroFlag == 0) {
-                                cout << *($1) << " = "<<  $3 << endl; vars[*$1] = $3; statementNum+=1; cout << "[" << statementNum << "] ";
+                                cout << "Variable "<< *($1) << " is assigned to "<<  $3 << "." << endl; vars[*$1] = $3; statementNum+=1; cout << "[" << statementNum << "] ";
                               }
                               declFlag = 0;
                               validFlag = 0;
